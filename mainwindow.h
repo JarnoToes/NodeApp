@@ -24,6 +24,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void refreshData();
+    void getRequest(const QUrl&);
 
     QString response;
 
@@ -34,6 +35,8 @@ private slots:
 
     void on_but_Status_clicked();
 
+    void getFinished(QNetworkReply*);
+
 private:
     Ui::MainWindow *ui;
     QNetworkAccessManager *manager;
@@ -41,5 +44,7 @@ private:
     nodeData *mappedNodes;
 
     friend class nodeData;
+
+    int pbarVal = 0;
 };
 #endif // MAINWINDOW_H

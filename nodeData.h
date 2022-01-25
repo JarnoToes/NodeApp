@@ -5,7 +5,7 @@
 #include <map>
 #include "ui_mainwindow.h"
 
-#define IP (QString("143.176.228.86:8090"))
+#define IP (QString("192.168.0.63:8090"))
 
 class nodeData
 {
