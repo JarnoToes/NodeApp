@@ -30,12 +30,10 @@ public:
 
 private slots:
     void on_but_OnOff_clicked();
-
     void on_but_UpdateList_clicked();
-
     void on_but_Status_clicked();
-
-    void getFinished(QNetworkReply*);
+    void on_getProvisionable_clicked();
+    void on_butProvision_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -45,6 +43,6 @@ private:
 
     friend class nodeData;
 
-    int pbarVal = 0;
+    double pbarVal = 0;
 };
 #endif // MAINWINDOW_H

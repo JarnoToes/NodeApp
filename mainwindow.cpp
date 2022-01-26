@@ -8,6 +8,7 @@
 #include <QThread>
 #include <QSignalSpy>
 #include <QProgressBar>
+#include <QJsonArray>
 #include "nodeData.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -33,15 +34,6 @@ void MainWindow::getFinished(QNetworkReply *reply)
     response = reply->readAll();
 }
 
-void MainWindow::on_getProvisionable_clicked()
-{
-    getRequest(QUrl("http://"+IP+"/"));
-}
-
-void MainWindow::on_butProvision_clicked()
-{
-    getRequest(QUrl("http://"+IP+"/"));
-}
 
 void MainWindow::getRequest(const QUrl& url)
 {
@@ -53,7 +45,41 @@ void MainWindow::getRequest(const QUrl& url)
     reply = manager->get(request);
     loop.exec();
     response = reply->readAll();
+    qDebug() << response;
 }
+
+void MainWindow::on_getProvisionable_clicked()
+{
+    ui->list_provision->clear();
+    getRequest(QUrl("http://"+IP+"/provision/scan"));
+    QJsonObject obj;
+    QJsonDocument doc = QJsonDocument::fromJson(response.toUtf8());
+
+    obj = doc.object();
+
+    QJsonValue temp = obj.value("UUIDs");
+    QJsonArray UUIDs = temp.toArray();
+
+    QJsonDocument udoc;
+    doc.setArray(UUIDs);
+    QString data(udoc.toJson());
+    ui->list_provision->addItem(data);
+
+    {
+
+    }
+}
+
+void MainWindow::on_butProvision_clicked()
+{
+    QString selectedUUID = ui->list_provision->currentText();
+
+    getRequest(QUrl("http://"+IP+"/provision/"+selectedUUID));
+
+
+}
+
+
 
 void MainWindow::on_but_OnOff_clicked()
 {
@@ -82,7 +108,7 @@ void MainWindow::on_but_Status_clicked()
     ui->view_nodes->clear();
     ui->progressBar->setValue(0);
     //QApplication::processEvents();
-    int addVal = ((100 / mappedNodes->nodeMap.size()) / 2);
+    double addVal = ((100 / mappedNodes->nodeMap.size()) / 2);
 
 
     for(auto& t : mappedNodes->nodeMap)
@@ -106,7 +132,9 @@ void MainWindow::on_but_Status_clicked()
                 ui->view_nodes->addItem(node + " | " + QString::fromStdString(nodeStatus));
             }
         }
+
     }
+    ui->progressBar->setValue(100);
 }
 
 void MainWindow::refreshData()
