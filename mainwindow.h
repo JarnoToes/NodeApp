@@ -34,6 +34,7 @@ private slots:
     void on_but_Status_clicked();
     void on_getProvisionable_clicked();
     void on_butProvision_clicked();
+    void on_but_getResult_clicked();
 
 private:
     Ui::MainWindow *ui;
